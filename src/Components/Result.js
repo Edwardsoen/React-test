@@ -8,52 +8,23 @@ import {MDCChipSet} from '@material/chips';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-
-import Grid from '@material-ui/core/Grid';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
-import Paper from '@material-ui/core/Paper';
-
-
-
-
-const classes = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      // display: 'flex',
-      // flexWrap: 'wrap',
-      // justifyContent: 'space-around',
-      overflow: 'hidden',
-      backgroundColor: theme.palette.background.paper,
-    },
-    gridList: {
-    },
-  }),
-);
-
-
-
+import './style.scss'
 
 
 class Result extends React.Component{
     constructor(props) {
         super(props)
         this.props = props; 
-        this.state = {
-            Query : "", 
-        }
-        
     }
 
+
+   
 
     componentDidMount(){
         const tabBar = new MDCTabBar(document.querySelector('.mdc-tab-bar'));
         const chipSetEl = document.querySelector('.mdc-chip-set');
         const chipSet = new MDCChipSet(chipSetEl);
-        
-       
+        // alert(this.props.searchItem); //searchItem props 
     }
 
     createTab(title, isActive){
@@ -119,6 +90,7 @@ class Result extends React.Component{
 
     render(){
         return(
+
             <div>
             <div class="mdc-chip-set mdc-chip-set--filter" role="grid">
                 {this.createChips("testing1", true)}
@@ -142,7 +114,7 @@ class Result extends React.Component{
             <div >
          
 
-
+{/* 
                 <GridList cellHeight='150'   cols="3">
                     <GridListTile>
                       <img src= "https://it-s.com/wp-content/uploads/2020/07/concept-art.jpg"/>
@@ -156,7 +128,7 @@ class Result extends React.Component{
                     </GridListTile>
                  
                  
-                </GridList>
+                </GridList> */}
           </div>
 
 

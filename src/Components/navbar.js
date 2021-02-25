@@ -12,7 +12,8 @@ import App from './App';
 import Register from './Register';
 import Result from './Result'
 import {MDCDialog} from '@material/dialog';
-
+import {$,jQuery} from 'jquery';
+import 'node-fetch';
 
 
 
@@ -22,26 +23,49 @@ class Navbar extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      inputValue: ''
+      inputValue: '', 
     };
     this.props = props; 
     this.handleChange = this.handleChange.bind(this); 
+    this.request = this.request.bind(this); 
 
   }
 
   handleChange(e) {
-    this.setState({ inputValue: e.target.value });
+    this.setState({ inputValue: e.target.value});
+    // alert(this.state.inputValue); 
   }
- 
-
   
 
   componentDidMount(){
-    // const d = new MDCDialog(document.querySelector('.mdc-dialog'));  
-    // d.open();  
-
-
+    var search = "tseting"; 
+    var sites = "sits"; 
+    var amount = "20";
+    const url = `http://192.168.111.128:3000/search/all?search=${search}&sites=${sites}&amount=${amount}`;  
+    const fetch = require('node-fetch'); 
+    
+    fetch(url,{
+      credentials: 'same-origin'
+    }).then(res => res.text())
+        .then(data => console.log(data))
   }
+
+  request(){
+      // var search = this.state.inputValue; 
+      // var sites = "sits"; 
+      // var amount = "20";
+      // const url = `http://192.168.111.128:3000/search/all?search=${search}&sites=${sites}&amount=${amount}`;  
+      // const fetch = require('node-fetch'); 
+      
+      // fetch(url,{
+      //   credentials: 'same-origin'
+      // }).then(res => res.text())
+      //     .then(data => console.log(data))
+    
+        }
+
+    
+
   handleLoginClick(){
     const d = new MDCDialog(document.querySelector('#loginDialog'));  
     d.open();  
@@ -58,10 +82,6 @@ class Navbar extends React.Component{
     render(){
         return (
         
-
-
-
-
             <Router>
             <div>
               <Login></Login>
@@ -71,13 +91,10 @@ class Navbar extends React.Component{
               <a class="navbar-brand" href="/">Home</a>
               
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0"style ={{width:"150%"}}>
-
-                <form class="d-flex" style ={{width:"100%"}}  method = "GET" action = "search">
-                  
-                    <input class="form-control me-2" type="search" placeholder="Search" id="Search" style={{backgroundColor:'black', borderColor:"grey", color:'white'}} onChange = {this.handleChange} name = "q" ></input>
-                    <button class="btn btn-outline-success" type="submit" style={{color:'white', border:"none"}}>Search</button>
+                <form class="d-flex" style ={{width:"100%"}}  method = "GET" action = "search" onSubmit={this.request}>
+                    <input class="form-control me-2" type="search" placeholder="Search" id="Search" style={{backgroundColor:'black', borderColor:"grey", color:'white'}} onChange = {this.handleChange} name = "q"></input>
+                    <button class="btn btn-outline-success" type="submit" style={{color:'white', border:"none"}} >Search</button>
                 </form>
       
                 

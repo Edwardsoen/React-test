@@ -10,6 +10,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
     "bootstrap": "^4.6.0",
+    "form-data": "^4.0.0",
     "jquery": "^3.5.1",
     "material-components-web": "^10.0.0",
     "node-fetch": "^2.6.1",
@@ -20,6 +21,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
+    "style-loader": "^2.0.0",
     "web-vitals": "^1.1.0"
   },
   "scripts": {
@@ -46,7 +48,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "sass-loader": "^11.0.1"
-  }
+  "devDependencies": {}
 }

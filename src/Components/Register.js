@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import React, {Component} from 'react'; 
+import './style.scss'
 
 
 class Register extends React.Component{
@@ -7,7 +8,7 @@ class Register extends React.Component{
         return (
             <div className = "mdc-dialog" id = "registerDialog">
                 <div className = "mdc-dialog__container">
-                    <div className = "mdc-dialog__surface">
+                    <div className = "mdc-dialog__surface" >
                         <div className = "mdc-dialog__content">
                             <div> 
                             <form>
