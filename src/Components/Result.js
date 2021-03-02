@@ -9,6 +9,9 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import './mdc-style.scss'
+import Tags from './Tags'; 
+import Tabs from './Tabs';
+
 
 
 
@@ -18,115 +21,28 @@ class Result extends React.Component{
         this.props = props; 
         this.state = { 
           sitesList: [], 
-          imagesData: [],
-          tagList: [], 
-          slectedTab: 0, 
+          // imagesData: [],
+          selectedTab: 0, 
+          imagesData : {"artstation":[{"url":"https://www.artstation.com/artwork/8Y906","icon":"https://cdna.artstation.com/p/assets/images/images/009/529/422/20180226133256/smaller_square/finnian-macmanus-10-testingchamber-fmac.jpg?1519673577","isAdult":false},{"url":"https://www.artstation.com/artwork/OvEAy","icon":"https://cdnb.artstation.com/p/assets/covers/images/001/036/975/20150804131610/smaller_square/alexey-pyatov-14-material-testing-room.jpg?1443928403","isAdult":false},{"url":"https://www.artstation.com/artwork/6r31W","icon":"https://cdnb.artstation.com/p/assets/images/images/010/806/811/smaller_square/josu-solano-action-keyframe-lr.jpg?1526333097","isAdult":false},{"url":"https://www.artstation.com/artwork/RY6GVA","icon":"https://cdnb.artstation.com/p/assets/images/images/019/567/009/20190725081248/smaller_square/thomas-dubois-girl-text-web.jpg?1564060368","isAdult":false},{"url":"https://www.artstation.com/artwork/v23Nmd","icon":"https://cdna.artstation.com/p/assets/images/images/034/629/770/smaller_square/james-busby-7.jpg?1612805868","isAdult":false}]}
         }; 
     }
 
-
-    getSitesList(){
-      const url = "http://192.168.111.128:3000/api/sites";
-      const fetch =require('node-fetch');
-      fetch(url).then(res => res.json()).then(data=> this.setState({sitesList:Object.keys(JSON.parse(JSON.stringify(data)))})); //JSON TO KEYS LIST
-    };
-
-    getTagsList(){
-      const url = "http://192.168.111.128:3000/api/tags";
-      const fetch =require('node-fetch');
-      fetch(url).then(res => res.json()).then(data => JSON.parse(JSON.stringify(data))["tags"]).then(d => this.setState({tagList:d}));
-    }
     
     getImageData(search, siteCode, amount){
           //sitesCide = site code from sitseList JSON  
       const url = `http://192.168.111.128:3000/search/all?search=${search}&sites=${siteCode}&amount=${amount}`;  
       const fetch = require('node-fetch'); 
-      fetch(url,{
-        credentials: 'same-origin'
-      }).then(res => res.json())
-          .then(data => this.setState({imagesData:JSON.parse(JSON.stringify(data))})); 
+      // fetch(url,{
+      //   credentials: 'same-origin'
+      // }).then(res => res.json())
+      //     .then(data => this.setState({imagesData:JSON.parse(JSON.stringify(data))})); 
     }
 
-
-    componentDidUpdate(){ //reinitaite material design compoentn //TODO: OPTIMIZE PERFORMANCE
-        try { 
-        const chipSet = new MDCChipSet(document.querySelector('.mdc-chip-set'));
-        chipSet.listen('MDCChip:selection', function(event){
-          console.log(event.detail.chipId); 
-        }); 
-        }catch(e) {
-          console.log(e);
-        }
-        try {
-          const tabBar = new MDCTabBar(document.querySelector('.mdc-tab-bar'));
-          var tabs  = document.querySelectorAll('.mdc-tab');
-          tabBar.listen('MDCTabBar:activated', function(event) {
-            let tab = tabs[event.detail.index];
-            this.setState({slectedTab:event.detail.index});
-          }.bind(this));
-
-          
-        }catch(e){
-          console.log(e)
-        }
-
-    }
-
-    
     componentDidMount(){
-        this.getSitesList(); 
-        this.getImageData(this.props.searchItem, "0", 20); 
-        this.getTagsList(); 
-        // alert(this.props.searchItem); 
+      this.getImageData()
     }
 
-    createTab(title, isActive){
-        if (isActive)
-        {
-            var s = "mdc-tab mdc-tab--active";
-            var s2 = "mdc-tab-indicator mdc-tab-indicator--active";
-        }else {
-            var s = "mdc-tab mdc-tab";
-            var s2 = "mdc-tab-indicator mdc-tab-indicator"
-        }
-        return (
-            <button class={s} tabindex="0" >
-            <span class="mdc-tab__content" >
-              <span class="mdc-tab__text-label" style = {{color:"white"}}>{title}</span>
-            </span>
-            <span class={s2} >
-              <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline "></span>
-            </span>
-            <span class="mdc-tab__ripple"></span>
-          </button>
-        );
-    }
 
-    createChips(title, isSelected){
-        if(isSelected){
-            var s = "mdc-chip mdc-chip--selected";
-        }else {
-            var s = "mdc-chip";
-        }
-        return(
-            <div class={s} role="row" style = {{background:"grey"}}>
-            <div class="mdc-chip__ripple"></div>
-            <span class="mdc-chip__checkmark" >
-              <svg class="mdc-chip__checkmark-svg" viewBox="-2 -3 30 30">
-                <path class="mdc-chip__checkmark-path" fill="none" stroke="black"
-                      d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-              </svg>
-            </span>
-            <span role="gridcell">
-              <span role="checkbox" tabindex="0" aria-checked="false" class="mdc-chip__primary-action">
-                <span class="mdc-chip__text"><span style={{color:"white"}}>{title}</span></span>
-              </span>
-            </span>
-          </div>
-        );
-
-
-    }
 
     createImageItem(src){
         return(
@@ -138,32 +54,10 @@ class Result extends React.Component{
         ); 
     }
 
-    craeteChipsSet(chipList){
-      var jsx =[]
-      if (chipList.length ==0) { //if ajax return null 
-        return null;
-      } 
-      else // if data is received
-      { let i ; 
-        for(i = 0; i <= chipList.length -1; i++){
-          jsx.push(this.createChips(chipList[i], false)); 
-        }
-
-        // return jsx; 
-        return(
-          <div class="mdc-chip-set mdc-chip-set--filter" role="grid">
-          {jsx}
-          </div>
-        );
 
 
-      }; 
-       
-    
-    }
-
-    parseImageData(tabIndex){
-      if (tabIndex ==0 ){ //if all tab selected, merge and flatten list
+    parseImageData(){
+      if (this.state.selectedTab == 0 ){ //if all tab selected, merge and flatten list
         var nestedListData =[]; 
         var i;
         var keys = Object.keys(this.state.imagesData);  
@@ -171,80 +65,62 @@ class Result extends React.Component{
             var d = this.state.imagesData[keys[i]]
             nestedListData.push(d)
           }
-          return [].concat.apply([], nestedListData); //return flatten list 
+          return [].concat.apply([], nestedListData); //return flatten list == [{url:...., icon:....., }] 
         }
       else{
-        return this.state.imagesData[this.state.sitesList[tabIndex]]; 
+        return this.state.imagesData[this.state.sitesList[this.state.selectedTab]]; 
         //grab data from specitific sitse 
       }
+      
     }
 
     createTabView(){
-      var d = this.state.sitesList[this.state.slectedTab]; 
-      return d;  
-
+      try {
+      var data = this.parseImageData(); 
+      var i;
+      var JsXview = [];  
+      console.log(data); 
+      for(i=0; i <= data.length - 2; i++){//fix this
+        let url = data[i]['url'];
+        let icon = data[i]["icon"]
+        console.log(url); 
+          JsXview.push(
+                    <GridListTile>
+                      <a href = {url }><img src= {icon}/></a>
+                    </GridListTile>
+        )
+      }
+      return JsXview; 
+    }catch(e){
+        alert(e);
+        return null; 
+      }
+      
+        
     }
+    
+    handleTabChange(e){
+      console.log(e); 
+    }
+
+    
+  
+
+
+
+
 
     render(){
         return( 
-
             <div>
-            {this.craeteChipsSet(this.state.tagList)}
-            {this.createTabView()}
-            <div className = "mdc-tab-bar" role = "tablist">
-                <div className = "mdc-tab-scroller" >
-                    <div className = "mdc-tab-scroller__scroll-area">
-                        <div className = "mdc-tab-scroller__scroll-content" >                     
-                            {this.state.sitesList.map((v, i) => {
-                              return this.createTab(v, false)
-                            })
-                            } 
-                        </div>
-                    </div>
-                </div>
-            </div>  
-            <div >
-        
-
-          <ul class="mdc-image-list mdc-image-list--masonry my-masonry-image-list">
-          <li class="mdc-image-list__item">
-            <img class="mdc-image-list__image" src= "https://it-s.com/wp-content/uploads/2020/07/concept-art.jpg"/>
-            <div class="mdc-image-list__supporting">
-              <span class="mdc-image-list__label">Text label</span>
-            </div>
-          </li>
-          <li class="mdc-image-list__item">
-            <img class="mdc-image-list__image" src= "https://cdna.artstation.com/p/assets/images/images/002/342/932/large/daeho-cha-.jpg?1460522296"/>
-            <div class="mdc-image-list__supporting">
-              <span class="mdc-image-list__label">Text label</span>
-            </div>
-          </li>
-
-        </ul>
-
-
-
-
-
-
-
-
-                {/* <GridList cellHeight='150'   cols="3">
-                    <GridListTile>
-                      <img src= "https://it-s.com/wp-content/uploads/2020/07/concept-art.jpg"/>
-                    </GridListTile>
-                    <GridListTile>
-                      <img src= "https://www.clipstudio.net/wp-content/uploads/2019/09/0034_001-1.jpg"/>
-                    </GridListTile>
-                 
-                    <GridListTile>
-                      <img src= "https://cdna.artstation.com/p/assets/images/images/002/342/932/large/daeho-cha-.jpg?1460522296"/>
-                    </GridListTile>
-                </GridList>  */}
-
-
-
-          </div>
+             <Tags></Tags>
+            <Tabs isChanged = {this.handleTabChange}></Tabs>
+      
+         
+                 <GridList cellHeight='150'   cols="3">
+                    {this.createTabView()}
+                </GridList>  
+         
         </div>
         )
     }

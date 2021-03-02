@@ -76,8 +76,9 @@ class Navbar extends React.Component{
     
   }
   renderResult(e){
-    if(window.location.href.toString().includes("search")){ //FIX THISSSS AHAHAHAHAHHAAH
-      return <Result></Result>
+    if(window.location.href.toString().includes("search")){ //FIX THISSSS AHAHAHAHAHHAAH 
+      var searchItem = new URLSearchParams(window.location.search).get("q");  
+      return <Result searchItem = {searchItem}></Result>
     }
     else{
       return null; 
