@@ -8,7 +8,7 @@ class Tabs extends React.Component{
         super(props)
         this.props = props; 
         this.state = { 
-            sitesList:["test", "tesettttt"], 
+            sitesList:[], 
             isLoaded:false, 
             selectedTab:0, 
             isInitialized: false
@@ -20,8 +20,10 @@ class Tabs extends React.Component{
         const link = "http://192.168.43.176:3000/"; 
         const url = `${link}/api/sites`;
         const fetch =require('node-fetch');
-        fetch(url).then(res => res.json()).then(data=> this.setState({sitesList:Object.keys(JSON.parse(JSON.stringify(data)))})).then(this.updateSitesList()); //JSON TO KEYS LIST
-      };
+        fetch(url).then(res => res.json()).then(data=> 
+            JSON.parse(JSON.stringify(data))["sites"]).then(sites => this.setState({sitesList:sites})).then(this.updateSitesList); //JSON TO KEYS LIST
+        // this.setState({sitesList:["tst1", "tst2"]})
+        };
 
     componentDidUpdate(){
         if(this.state.isInitialized == false){
@@ -31,12 +33,31 @@ class Tabs extends React.Component{
                 tabBar.listen('MDCTabBar:activated', function(event) {
                     let tab = tabs[event.detail.index];
                     this.setState({slectedTab:event.detail.index});
-                    this.props.isChanged(this.state.sitesList[event.detail.index]); 
+                    this.props.isChanged(event.detail.index); 
                 }.bind(this));
+                this.setState({isInitialized:true})
                 }catch(e){
                 }
             };
     };
+
+    initializeMDC(){
+        if(this.state.isInitialized == false){
+            try {
+                const tabBar = new MDCTabBar(document.querySelector('.mdc-tab-bar'));
+                var tabs  = document.querySelectorAll('.mdc-tab');
+                tabBar.listen('MDCTabBar:activated', function(event) {
+                    let tab = tabs[event.detail.index];
+                    this.setState({slectedTab:event.detail.index});
+                    this.props.isChanged(event.detail.index); 
+                }.bind(this));
+                
+                this.setState({isInitialized:true})
+                }catch(e){
+                }
+            };
+
+    }
 
 
     createTab(title, isActive){

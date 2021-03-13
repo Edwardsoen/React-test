@@ -14,53 +14,52 @@ class Result extends React.Component{
         super(props)
         this.props = props; 
         this.state = { 
-          selectedTab: "all", 
-          imagesData: {}, 
-          items: Array.from({ length: 70 })
+          siteslist:[], 
+          selectedTab: "all", //default
+          imagesData: [], 
+          currentPage:1 //number of images requested....  will reset onTabChange //artstation max == 50, dev == 
+
          }; 
         this.handleTabChange = this.handleTabChange.bind(this); 
         this.appendSitesList = this.appendSitesList.bind(this); 
-        this.fetchMoreData = this.fetchMoreData.bind(this); 
+        this.grabNewData = this.grabNewData.bind(this); 
+        this.scrollAction = this.scrollAction.bind(this); 
       }
 
 
     
-    getImageData(search, siteCode, amount){
+    getImageData(search, siteCode, page){
           //sitesCide = site code from sitseList sitesList data [0] == all
-          const link = "http://192.168.43.176:3000/"; 
-      const url = `${link}/search/all?search=${search}&sites=${siteCode}&amount=${amount}`;  
+      const link = "http://192.168.43.176:3000/"; 
+      
+      var s = `search=${search}`; 
+      
+      if(!siteCode){
+        var site = ""; 
+      }else {
+        var site = `&sites=${siteCode}`;
+      }
+      var a =  `&page=${page}`; 
+      const url = `${link}/search/all?${s}${site}${a}`;    //${link}/search/all?search=${search}&sites=${siteCode}&page=${page}; 
       const fetch = require('node-fetch'); 
       fetch(url,{
         credentials: 'same-origin'
       }).then(res => res.json())
-          .then(data => this.setState({imagesData:JSON.parse(JSON.stringify(data))})).catch(error => {console.log("erorrr")}); 
+          .then(data => JSON.parse(JSON.stringify(data))["data"])
+          .then(d => this.setState({imagesData:this.state.imagesData.concat(d)}))
+          .then(this.setState({currentPage:this.state.currentPage + page}))
+          .catch(error => {alert(error)}); 
     };
 
     componentDidMount(){
       var searchItem = new URLSearchParams(window.location.search).get("q"); 
-      this.getImageData(searchItem, this.state.sites, 20); 
+      this.getImageData(searchItem,"", 1); 
     };
 
-    parseImageData(){
-      if (this.state.selectedTab == "all" ){ //if all tab selected, merge and flatten list
-        var nestedListData =[]; 
-        var i;
-        var keys = Object.keys(this.state.imagesData);  
-        for(i =0; i <= keys.length -1; i ++){
-            var d = this.state.imagesData[keys[i]]
-            nestedListData.push(d)
-          }
-          return [].concat.apply([], nestedListData); //return flatten list == [{url:...., icon:....., }] 
-        }
-      else{
-        return this.state.imagesData[this.state.selectedTab]; 
-        //grab data from specitific sitse 
-      }
-    };
-
+    
     createTabView(){
       try {
-      var data = this.parseImageData(); 
+      var data = this.state.imagesData;
       var i;
       var JsXview = [];  
       for(i=0; i <= data.length - 1; i++){//fix this
@@ -80,46 +79,51 @@ class Result extends React.Component{
     }
     
     handleTabChange(e){
+      this.setState({imagesData:[]}); 
+      this.setStatee({currentPage:0});
       this.setState({selectedTab:e});
-    }
+      this.grabNewData(); 
+    };
 
     appendSitesList(e){
-      var i; 
-      var d = this.state.imagesData; 
-      for(i=0; i <= e.length - 1; i++){//create key(sitesname)-value(empty list(to be appended))
-        d[e[i]]  = []; //{sitse1: [], site2:[]......}
-      
-      };
-      this.setState({imagesData:d});  
-      this.setState({testing: e});
-    }
-
-    fetchMoreData(){
-      this.setState({
-        items: this.state.items.concat(Array.from({ length: 20 }))
-      });
+      this.setState({siteslist: e});
     };
+
+    grabNewData() { // new data onTabChange 
+      var searchItem = new URLSearchParams(window.location.search).get("q"); 
+      console.log("grabbing new data"); 
+      this.getImageData(searchItem,this.state.selectedTab,20);
+      console.log("new data grabbed"); 
+    };
+
+
+    scrollAction(){
+      // this.setState({currentPage:this.state.currentPage + 1});
+      // var searchItem = new URLSearchParams(window.location.search).get("q"); 
+      // this.getImageData(searchItem,"", 1); 
+      // this.setState({imagesData:this.state.imagesData.concat(this.state.imagesData)});
+      console.log("is scrolled")
+    }
+   
 
     render(){
         return( 
             <div>
              <Tags></Tags>
-            <Tabs isChanged = {this.handleTabChange} siteslist = {this.appendSitesList}></Tabs>
-            
-                 <GridList cellHeight={300} cols={6} style ={{maxWidth:"100%"}}>
-                    {this.createTabView()}
-              </GridList> 
-            
-              {/* <InfiniteScroll
-                dataLength={this.state.items.length}
-                next={this.fetchMoreData}
+            <Tabs isChanged = {this.handleTabChange} siteslist = {this.appendSitesList}></Tabs>   
+               <InfiniteScroll
+                dataLength={this.state.imagesData.length}
+                next={this.scrollAction}
                 hasMore={true}>
-                {this.state.items.map((i, index) => (
-                  <div key={index}>
-                    div - #{index}
-                  </div>
-                ))}
-              </InfiniteScroll> */}
+               <GridList cellHeight={300} cols={6} style ={{maxWidth:"100%", maxHeight:"100%", overflow:"hidden", margin:"0", height:"100%"}}>                     
+               {this.createTabView()}   
+               </GridList>  
+
+
+            
+
+
+              </InfiniteScroll> 
 
 
         </div>
