@@ -35,29 +35,13 @@ class Tabs extends React.Component{
                     this.setState({slectedTab:event.detail.index});
                     this.props.isChanged(event.detail.index); 
                 }.bind(this));
-                this.setState({isInitialized:true})
+                this.setState({isInitialized:true});
                 }catch(e){
                 }
             };
     };
 
-    initializeMDC(){
-        if(this.state.isInitialized == false){
-            try {
-                const tabBar = new MDCTabBar(document.querySelector('.mdc-tab-bar'));
-                var tabs  = document.querySelectorAll('.mdc-tab');
-                tabBar.listen('MDCTabBar:activated', function(event) {
-                    let tab = tabs[event.detail.index];
-                    this.setState({slectedTab:event.detail.index});
-                    this.props.isChanged(event.detail.index); 
-                }.bind(this));
-                
-                this.setState({isInitialized:true})
-                }catch(e){
-                }
-            };
-
-    }
+  
 
 
     createTab(title, isActive){

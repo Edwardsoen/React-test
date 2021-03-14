@@ -11,22 +11,48 @@ class Tags extends React.Component{
         this.props = props;
         this.state = { 
             tagList:[],            
+            isInitialized:false, 
+            tagStatus:{} //TAGID: ISCHECKED (BOOLEAN)
         }; 
     }
+
+
+
     componentDidMount(){
         this.getTagsList(); 
     }
     componentDidUpdate(){
+      if(!this.state.isInitialized){
         try { 
-            const chipSet = new MDCChipSet(document.querySelector('.mdc-chip-set'));
-            chipSet.listen('MDCChip:selection', function(event){
-              console.log(event.detail); 
-            }); 
-        }catch(e) {
-            console.log(e);
-        }
+          const chipSet = new MDCChipSet(document.querySelector('.mdc-chip-set'));
+          var i;
+          var chipData = {}; 
+          for(i =0; i<= chipSet.chips.length -1 ; i ++){
+             //check if chip is checekd
+             var isTrueSet = (chipSet.chips[i]["primaryAction_"]["ariaChecked"] == 'true'); //string to boolean
+            chipData[chipSet.chips[i]["id"]] = isTrueSet;
+            
+          };
+          this.setState({tagStatus:chipData}); 
 
-    }
+
+          chipSet.listen('MDCChip:selection', function(event){
+            console.log(event.detail);
+            let d = this.state.tagStatus;
+            d[[event.detail["chipId"]]] = event.detail["selected"];
+            this.setState({tagStatus:d}); 
+            this.props.tagHash(this.state.tagStatus); 
+          }.bind(this)); 
+
+
+
+          this.setState({isInitialized: true}); 
+
+      }catch(e) {
+          console.log(e);
+      }
+      } 
+    };
 
 
     getTagsList(){
@@ -66,7 +92,7 @@ class Tags extends React.Component{
     }
     
     createChipSet(chipList){
-        var jsx =[]
+        var jsx =[];
         if (chipList.length ==0) { //if ajax return null 
           return null;
         } 
