@@ -28,6 +28,10 @@ class Register extends React.Component{
         var data = {username : this.state.username, password: this.state.password, email: this.state.email}; 
         fetch(url, {
             method: "POST", 
+            headers: {
+                'Content-Type': 'application/json',
+                "Accept": "application/json"
+            },
             body: JSON.stringify(data)
         }, 
         )
@@ -56,7 +60,7 @@ class Register extends React.Component{
                     <div className = "mdc-dialog__surface" >
                         <div className = "mdc-dialog__content">
                             <div> 
-                            <form onSubmit = {this.registerUser}>
+                            <form >
                                 <div className= "mb-3">
                                     <label className= "form-label" htmlFor= "username" >Username</label>
                                     <input id = "RegisterUsername" className = "form-control" onChange = {this.usernameOnChange}></input>
@@ -66,7 +70,7 @@ class Register extends React.Component{
                                     <input type = "password"  id= "RegisterPassword" className = "form-control"  onChange= {this.passwordOnChange}></input> 
                                     <input type = "password" id= "passwordConfirm" placeholder = "Re-enter Password" className = "form-control"></input> 
                                 </div>
-                                    <input type = "submit" defaultValue = "Register" className = "btn btn-primary"  style = {{width : "100%"}}></input>
+                                    <input type = "button" defaultValue = "Register" className = "btn btn-primary"  style = {{width : "100%"}} onClick ={this.registerUser} ></input>
 
                             </form>
                             </div>
