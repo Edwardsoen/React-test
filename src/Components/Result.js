@@ -18,24 +18,26 @@ class Result extends React.Component{
           selectedTab: "all", //default
           imagesData: [], 
           currentPage:1,  //number of images requested....  will reset onTabChange //artstation max == 50, dev == 
-          tagStatus:{}
+          tagStatus:{}, 
+          isOnHomePage: false, 
+          searchItem:"landscape"
          }; 
         this.handleTabChange = this.handleTabChange.bind(this); 
         this.appendSitesList = this.appendSitesList.bind(this); 
-        this.grabNewData = this.grabNewData.bind(this); 
+        this.grabDataOnTabChange = this.grabDataOnTabChange.bind(this); 
         this.scrollAction = this.scrollAction.bind(this); 
         this.handleTagChange = this.handleTagChange.bind(this); 
+        this.renderTagsAndTabs = this.renderTagsAndTabs.bind(this); 
       }
 
 
     
     getImageData(search, siteCode, page){
           //sitesCide = site code from sitseList sitesList data [0] == all
-      const link = "http://192.168.43.176:3000/"; 
+      // const link = "http://192.168.43.176:3000/"; 
+      const link = "http://192.168.111.128:3000/"; 
       this.controller = new AbortController();
       var signal = this.controller.signal;
-
-      
       var s = `search=${search}`; 
       
       if(!siteCode){
@@ -49,12 +51,22 @@ class Result extends React.Component{
       fetch(url, {signal}).then(res => res.json())
           .then(data => JSON.parse(JSON.stringify(data))["data"])
           .then(d => this.setState({imagesData:this.state.imagesData.concat(d)}))
-          .catch(error => {alert(error)}); 
+          .catch(error => {console.log(error)}); 
     };
 
     componentDidMount(){
       var searchItem = new URLSearchParams(window.location.search).get("q"); 
-      this.getImageData(searchItem,"", this.state.currentPage); 
+
+      if(searchItem == null){
+        this.setState({isOnHomePage:true})
+        // this.setState({searchItem:"landscape"})
+        this.getImageData(this.state.searchItem, "", this.state.currentPage); 
+      }else {
+        this.setState({searchItem:searchItem})
+        this.getImageData(searchItem,"", this.state.currentPage);
+      }
+      
+       
     };
 
     
@@ -84,25 +96,21 @@ class Result extends React.Component{
       this.setState({currentPage:1}); 
       this.setState({imagesData:[]}); 
       this.setState({selectedTab:e});
-      this.grabNewData(); 
+      this.grabDataOnTabChange(); 
     };
 
     appendSitesList(e){
       this.setState({siteslist: e});
     };
 
-    grabNewData() { // new data onTabChange 
-      var searchItem = new URLSearchParams(window.location.search).get("q"); 
-      console.log("grabbing new data"); 
-      this.getImageData(searchItem,this.state.selectedTab,this.state.currentPage);
-      console.log("new data grabbed"); 
+    grabDataOnTabChange() { // new data onTabChange 
+      this.getImageData(this.state.searchItem ,this.state.selectedTab ,this.state.currentPage);
     };
 
 
     scrollAction(){
       this.setState({currentPage:this.state.currentPage + 1});
-      var searchItem = new URLSearchParams(window.location.search).get("q"); 
-      this.getImageData(searchItem,"", this.state.currentPage); 
+      this.getImageData(this.state.searchItem,"", this.state.currentPage); 
       // this.setState({imagesData:this.state.imagesData.concat(this.state.imagesData)});
       console.log("is scrolled")
     }
@@ -110,14 +118,27 @@ class Result extends React.Component{
     handleTagChange(e){
       this.setState({tagStatus:e})
     }
+
+    renderTagsAndTabs(){
+      if (this.state.isOnHomePage){
+        return null;
+      }
+      else {
+        return(   
+          <div>
+        <Tags tagHash = {this.handleTagChange}></Tags>
+        <Tabs isChanged = {this.handleTabChange} siteslist = {this.appendSitesList}></Tabs>   
+        </div>
+      );
+      }
+    };
    
 
     render(){
         return( 
             <div>
-             <Tags tagHash = {this.handleTagChange}></Tags>
-            <Tabs isChanged = {this.handleTabChange} siteslist = {this.appendSitesList}></Tabs>   
-    
+              {this.renderTagsAndTabs()}
+          
                <InfiniteScroll
                 dataLength={this.state.imagesData.length}
                 next={this.scrollAction}
@@ -128,9 +149,6 @@ class Result extends React.Component{
                <GridList cellHeight={300} cols={6} style ={{maxWidth:"100%", maxHeight:"100%", overflow:"hidden", margin:"0", height:"100%"}}>                     
                {this.createTabView()}   
                </GridList>  
-
-
-            
 
 
               </InfiniteScroll> 

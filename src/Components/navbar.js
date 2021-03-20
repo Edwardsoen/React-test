@@ -6,7 +6,7 @@ import Register from './Register';
 import Result from './Result'
 import {MDCDialog} from '@material/dialog';
 import 'node-fetch';
-
+import Home from './Home';
 
 
 
@@ -21,7 +21,6 @@ class Navbar extends React.Component{
     };
     this.props = props; 
     this.handleChange = this.handleChange.bind(this); 
-    this.request = this.request.bind(this); 
   }
 
   handleChange(e) {
@@ -37,20 +36,6 @@ class Navbar extends React.Component{
   
 
   }
-
-  request(){
-      // var search = this.state.inputValue; 
-      // var sites = "sits"; 
-      // var amount = "20";
-      // const url = `http://192.168.111.128:3000/search/all?search=${search}&sites=${sites}&amount=${amount}`;  
-      // const fetch = require('node-fetch'); 
-      
-      // fetch(url,{
-      //   credentials: 'same-origin'
-      // }).then(res => res.text())
-      //     .then(data => console.log(data))
-    
-        }
 
     
 
@@ -70,10 +55,9 @@ class Navbar extends React.Component{
   renderResult(e){
     if(window.location.href.toString().includes("search")){ //FIX THISSSS AHAHAHAHAHHAAH 
       return <Result></Result>
-
     }
     else{
-      return null; 
+      return <Home></Home>; 
     } 
   }; 
 

@@ -1,6 +1,7 @@
 import React, {Component} from 'react'; 
 import '../style/test.scss'; 
 import {MDCTabBar} from '@material/tab-bar'; 
+import { ContactsOutlined } from '@material-ui/icons';
 
 
 class Tabs extends React.Component{
@@ -8,7 +9,8 @@ class Tabs extends React.Component{
         super(props)
         this.props = props; 
         this.state = { 
-            sitesList:[], 
+            sitesList:[
+            ], 
             isLoaded:false, 
             selectedTab:0, 
             isInitialized: false
@@ -17,12 +19,12 @@ class Tabs extends React.Component{
     }
 
     getSitesList(){
-        const link = "http://192.168.43.176:3000/"; 
+        // const link = "http://192.168.43.176:3000/"; 
+        const link = "http://192.168.111.128:3000/"; 
         const url = `${link}/api/sites`;
         const fetch =require('node-fetch');
         fetch(url).then(res => res.json()).then(data=> 
             JSON.parse(JSON.stringify(data))["sites"]).then(sites => this.setState({sitesList:sites})).then(this.updateSitesList); //JSON TO KEYS LIST
-        // this.setState({sitesList:["tst1", "tst2"]})
         };
 
     componentDidUpdate(){

@@ -6,9 +6,9 @@ import {MDCDialog} from '@material/dialog';
 class Login extends React.Component{
     componentDidMount(){
         const d = new MDCDialog(document.querySelector('.mdc-dialog')); 
-        
-    }
-    
+    };
+
+
 
     render(){
         return(
