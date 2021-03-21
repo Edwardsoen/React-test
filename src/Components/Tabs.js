@@ -20,7 +20,7 @@ class Tabs extends React.Component{
 
     getSitesList(){
         // const link = "http://192.168.43.176:3000/"; 
-        const link = "http://192.168.111.128:3000/"; 
+        const link = "http://192.168.111.128:3000"; 
         const url = `${link}/api/sites`;
         const fetch =require('node-fetch');
         fetch(url).then(res => res.json()).then(data=> 

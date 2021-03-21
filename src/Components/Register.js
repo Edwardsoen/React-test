@@ -16,13 +16,11 @@ class Register extends React.Component{
         this.usernameOnChange = this.usernameOnChange.bind(this); 
         this.registerUser = this.registerUser.bind(this); 
         this.passwordOnChange = this.passwordOnChange.bind(this); 
- 
     }
     
 
     registerUser(){
-        console.log("is trying to suibmitdasfsa")
-        const link = "http://192.168.111.128:3000/"; 
+        const link = "http://192.168.111.128:3000"; 
         const url = `${link}/api/register`;
         const fetch = require('node-fetch'); 
         var data = {username : this.state.username, password: this.state.password, email: this.state.email}; 
@@ -38,6 +36,7 @@ class Register extends React.Component{
     };
 
     checkPassword(e){ //check if password == confirmpassword 
+        
     }
 
     usernameOnChange(e){
@@ -47,10 +46,6 @@ class Register extends React.Component{
     passwordOnChange(e){
         this.setState({password: e.target.value});
     }; 
-
-
-
-  
 
 
     render() {
@@ -70,7 +65,7 @@ class Register extends React.Component{
                                     <input type = "password"  id= "RegisterPassword" className = "form-control"  onChange= {this.passwordOnChange}></input> 
                                     <input type = "password" id= "passwordConfirm" placeholder = "Re-enter Password" className = "form-control"></input> 
                                 </div>
-                                    <input type = "button" defaultValue = "Register" className = "btn btn-primary"  style = {{width : "100%"}} onClick ={this.registerUser} ></input>
+                                    <input type = "commit" defaultValue = "Register" className = "btn btn-primary"  style = {{width : "100%"}} onClick ={this.registerUser} ></input>
 
                             </form>
                             </div>

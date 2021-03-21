@@ -4,9 +4,53 @@ import {MDCDialog} from '@material/dialog';
 
 
 class Login extends React.Component{
+    constructor(props){
+      super(props); 
+      this.state = {
+        username:"", 
+        password: "", 
+        isChecked: false
+      }; 
+      this.props = props; 
+      this.handlePasswordChange = this.handlePasswordChange.bind(this); 
+      this.handleUsernameChange = this.handleUsernameChange.bind(this); 
+      this.handleCheckbox = this.handleCheckbox.bind(this); 
+      this.loginUser = this.loginUser.bind(this); 
+    }; 
+    handleCheckbox(e){ 
+      this.setState({isChecked:e.target.value}); 
+    };
+
+    handleUsernameChange(e){
+      this.setState({username: e.target.value}); 
+    };
+    handlePasswordChange(e){
+      this.setState({password: e.target.value}); 
+    };  
+    
+    loginUser(){
+      const link = "http://192.168.111.128:3000"; 
+      const url = `${link}/api/login`;
+      const fetch = require('node-fetch'); 
+      var data = {username : this.state.username ,  password: this.state.password}; 
+      fetch(url, {
+          method: "POST", 
+          headers: {
+              'Content-Type': 'application/json',
+              "Accept": "application/json"
+          },
+          body: JSON.stringify(data)
+      }, 
+      )
+    };
+    
+  
     componentDidMount(){
+        this.loginUser(); 
         const d = new MDCDialog(document.querySelector('.mdc-dialog')); 
     };
+
+
 
 
 
@@ -17,18 +61,18 @@ class Login extends React.Component{
               <div className = "mdc-dialog__surface">  
                 <div className = "mdc-dialog__content">
                   <div>
-                  <form>
+            <form>
                 <div className= "mb-3">
                     <label className= "form-label" htmlFor = "username">Username</label>
-                    <input id = "LoginUsername" className = "form-control"></input>
+                    <input id = "LoginUsername" className = "form-control" onChange = {this.handleUsernameChange}></input>
                 </div>
                 <div className = "mb-3">
                     <label className= "form-label" htmlFor = "password">Password</label>
-                    <input type = "password" name = "password" id= "LoginPassword" className = "form-control"></input>
-                    <input type = "checkbox" name ="rememberMe"></input> 
+                    <input type = "password" id= "LoginPassword" className = "form-control" onChange = {this.handlePasswordChange}></input>
+                    <input type = "checkbox" onChange = {this.handleCheckbox}></input> 
                     <label htmlFor = "rememberMe" style = {{margin:'3px'}}> Remember me </label>
                     <hr style = {{borderStyle: "none"}}></hr>
-                     <input type = "commit" defaultValue = "Login" className = "btn btn-primary" style = {{width : "100%"}} ></input>
+                     <input type = "commit" defaultValue = "Login" className = "btn btn-primary" style = {{width : "100%"}} onClick = {this.loginUser} ></input>
                 </div>
             </form>
                   </div>
