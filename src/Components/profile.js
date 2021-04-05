@@ -10,9 +10,10 @@ class Profile extends React.Component{
         this.props = props; 
     }
     componentDidMount(){
-
-        console.log(document.getElementById("staticBackdrop"))
-    }
+        // let m = document.getElementById('staticBackdrop')
+        // let myModal = new Modal(m, {})
+        // myModal.show(); 
+    }   
 
     render(){ 
         return(

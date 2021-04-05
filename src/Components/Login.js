@@ -63,6 +63,7 @@ class Login extends React.Component{
               'Content-Type': 'application/json',
               "Accept": "application/json"
           },
+          credentials: 'include', 
           // credentials: 'include', 
           body: JSON.stringify(data)
       }, 

@@ -9,12 +9,6 @@
 
 
 
-// .mdc-tab-bar{
-//     @include mdc-tab-bar-density(0); 
-// }
-
-
-$mycolor:blue; 
-h1{
-    color:$mycolor;
+.mdc-tab-bar{
+    @include mdc-tab-bar-density(-3)
 }

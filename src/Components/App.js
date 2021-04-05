@@ -7,6 +7,10 @@ import Login from './Login';
 import Register from './Register';
 import {MDCDialog} from '@material/dialog';
 import { Button } from 'bootstrap';
+import Modal from 'bootstrap/js/dist/modal'; 
+import {MDCMenu} from '@material/menu';
+import { Menu } from '@material-ui/core';
+import Profile from './profile';
 
 
 
@@ -26,6 +30,8 @@ class App extends React.Component{
         this.handleLeftButtonClick = this.handleLeftButtonClick.bind(this); 
         this.unMountComponent = this.unMountComponent.bind(this); 
         this.handleRightButtonClick = this.handleRightButtonClick.bind(this); 
+        this.parseResponse = this.parseResponse.bind(this); 
+        this.handleAccountClick = this.handleAccountClick.bind(this); 
     }
 
     
@@ -38,48 +44,51 @@ class App extends React.Component{
     } 
   }; 
 
-
-//   checkSession(){
-//     const link = "http://localhost:8000/"; 
-//     const url = `${link}api/login`;
-//     const fetch = require('node-fetch'); 
-//     fetch(url, {
-//         method: "POST", 
-//         headers: {
-//             'Content-Type': 'application/json',
-//             "Accept": "application/json"
-//         },
-//         credentials: 'include', 
-//     }, 
-//     ).then( data => data.json()).then(d => this.parseResponse(d)); 
-//   };
+  componentDidMount(){
+      this.checkSession()
+    
+  }
 
 
-//   parseResponse(data){
-//     data = JSON.parse(JSON.stringify(data)); 
-//     if("username" in data) { 
-//       data["username"];
-//      this.state.isLoggedI); 
-//     }
+  checkSession(){
+    const link = "http://localhost:8000/"; 
+    const url = `${link}api/login`;
+    const fetch = require('node-fetch'); 
+    fetch(url, {
+        method: "POST", 
+        headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json"
+        },
+        credentials: 'include', 
+        
+    }, 
+    ).then( data => data.json()).then(d => this.parseResponse(d)); 
+  };
+
+
+  parseResponse(data){
+    data = JSON.parse(JSON.stringify(data)); 
+    if("username" in data) { 
+     this.setState({loginStatus: true});
+     this.setState({username: data["username"]}) 
+    }
    
-//   }
-
-
-
-
+  }
 
   handleUsername(e){
     this.setState({username:e})
   }; 
 
 
-    renderComponent(component){ 
+    renderComponent(){ 
     var d = { 
         "register": <Register  isClosed = {this.unMountComponent}></Register>,  
-        "login":<Login isClosed = {this.unMountComponent} loginStatus = {this.handleLoginStatus} username = {this.handleUsername} ></Login>    
-
-
-        }
+        "login":<Login isClosed = {this.unMountComponent} 
+                loginStatus = {this.handleLoginStatus} 
+                username = {this.handleUsername} ></Login>,
+        "profile":<Profile isClosed = {this.unMountComponent}></Profile>
+    }
     return(
         d[this.state.componentToBeRendered]
     )
@@ -90,13 +99,17 @@ class App extends React.Component{
         console.log(e)
     }
 
-    
     unMountComponent(){
         this.setState({componentToBeRendered:""})
     }
 
     handleLeftButtonClick(){
         this.setState({componentToBeRendered: "login"})
+    }
+    handleAccountClick(){
+        let m = document.getElementById('staticBackdrop')
+        let myModal = new Modal(m, {})
+        myModal.show(); 
     }
 
     handleRightButtonClick(){
@@ -109,9 +122,16 @@ class App extends React.Component{
 
     render(){
         return (
-            <div>
-                <Navbar leftButtonisClicked = {this.handleLeftButtonClick} rightButtonisClicked = {this.handleRightButtonClick} loginStatus = {this.state.loginStatus} username = {this.state.username} ></Navbar>
+            <div> 
+                <Navbar leftButtonisClicked = {this.handleLeftButtonClick} 
+                rightButtonisClicked = {this.handleRightButtonClick} 
+                loginStatus = {this.state.loginStatus} 
+                username = {this.state.username} 
+                isClicked = {this.handleAccountClick}></Navbar>
                 {this.renderComponent()}
+                {this.renderResult()}
+                <Profile></Profile>
+               
             </div>
             
         );
