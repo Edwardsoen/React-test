@@ -45,9 +45,15 @@ class App extends React.Component{
   }; 
 
   componentDidMount(){
-      this.checkSession()
-    
+    this.checkSession()
+    this.testing()
   }
+ 
+  testing = () => {
+      console.log("testing arrow function")
+  } 
+
+
 
 
   checkSession(){
@@ -81,7 +87,7 @@ class App extends React.Component{
   }; 
 
 
-    renderComponent(){ 
+    renderComponent = () => { 
     var d = { 
         "register": <Register  isClosed = {this.unMountComponent}></Register>,  
         "login":<Login isClosed = {this.unMountComponent} 
@@ -94,25 +100,27 @@ class App extends React.Component{
     )
     }
 
-    handleLoginStatus(e){
+
+
+    handleLoginStatus = (e) => {
         this.setState({loginStatus:e})
         console.log(e)
     }
 
-    unMountComponent(){
+    unMountComponent = () => { 
         this.setState({componentToBeRendered:""})
     }
 
-    handleLeftButtonClick(){
+    handleLeftButtonClick = () =>{
         this.setState({componentToBeRendered: "login"})
     }
-    handleAccountClick(){
+    handleAccountClick= () => {
         let m = document.getElementById('staticBackdrop')
         let myModal = new Modal(m, {})
         myModal.show(); 
     }
 
-    handleRightButtonClick(){
+    handleRightButtonClick = () =>{
         this.setState({componentToBeRendered: "register"})
     }
 

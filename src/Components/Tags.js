@@ -75,7 +75,7 @@ class Tags extends React.Component{
       }
       
 
-    createChip(title, isSelected){
+    createChip = (title, isSelected) => {
         if(isSelected){
             var s = "mdc-chip mdc-chip--selected";
         }else {

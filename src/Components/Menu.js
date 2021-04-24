@@ -15,10 +15,8 @@ class Menu extends React.Component{
         this.handleAccount = this.handleAccount.bind(this); 
     }
 
-    componentDidMount(){
-    }
-
-    generateSession(){
+  
+    generateSession = () =>{
         var link =  "http://localhost:8000/api/sesion";
         fetch(link, {
           credentials: 'include'

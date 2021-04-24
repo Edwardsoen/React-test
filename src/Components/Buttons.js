@@ -36,9 +36,6 @@ class Buttons extends React.Component{
 
 
 
-
-
-
     createButton(){ 
         var data = []; 
 
@@ -52,7 +49,7 @@ class Buttons extends React.Component{
 
 
 
-    buttonJSX(title, url){
+    buttonJSX = (title, url) => {
         return(<li>
             <form method = "GET" action = "search">
               {/* <buttoin id = "Search" name = "q" value = "landscape" type = "submit" ></input> */}

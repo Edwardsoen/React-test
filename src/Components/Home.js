@@ -40,7 +40,7 @@ class Home extends React.Component{
 
   
 
-    carousel(){
+    carousel = () => {
         return(  
         <div id="carouselExampleCaptions" className="carousel slide" data-bs-ride="carousel"style = {{height:"600px", overflow: "visible"}} >
         <div class="carousel-indicators">

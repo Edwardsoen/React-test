@@ -45,7 +45,7 @@ class Tabs extends React.Component{
   
 
 
-    createTab(title, isActive){
+    createTab = (title, isActive) => {
         if (isActive)
         {
             var s = "mdc-tab mdc-tab--active";
